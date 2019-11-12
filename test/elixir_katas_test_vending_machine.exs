@@ -12,7 +12,8 @@ defmodule ElixirKatasVendingMachine do
     assert context[:state] |> VendingMachine.insert_coin() == %{
              current_amount: 0.00,
              coin_return: 0.00,
-             msg: "INSERT COIN"
+             msg: "INSERT COIN",
+             stock: %{"COLA" => 10, "CHIPS" => 10, "CANDY" => 10}
            }
   end
 
@@ -27,7 +28,8 @@ defmodule ElixirKatasVendingMachine do
            |> VendingMachine.insert_coin("NICKEL") == %{
              current_amount: 1.25,
              coin_return: 0.00,
-             msg: ""
+             msg: "",
+             stock: %{"COLA" => 10, "CHIPS" => 10, "CANDY" => 10}
            }
   end
 
@@ -40,7 +42,8 @@ defmodule ElixirKatasVendingMachine do
              %{
                current_amount: 0.50,
                coin_return: 0.02,
-               msg: ""
+               msg: "",
+               stock: %{"COLA" => 10, "CHIPS" => 10, "CANDY" => 10}
              }
   end
 
@@ -54,7 +57,8 @@ defmodule ElixirKatasVendingMachine do
              %{
                current_amount: 0.00,
                coin_return: 0.00,
-               msg: "THANK YOU"
+               msg: "THANK YOU",
+               stock: %{"COLA" => 9, "CHIPS" => 10, "CANDY" => 10}
              }
   end
 
@@ -70,32 +74,75 @@ defmodule ElixirKatasVendingMachine do
              %{
                current_amount: 0.00,
                coin_return: 0.00,
-               msg: "INSERT COIN"
+               msg: "INSERT COIN",
+               stock: %{"COLA" => 9, "CHIPS" => 10, "CANDY" => 10}
              }
   end
 
   test "The user doesn't insert enough change and selects a cola", context do
     assert context[:state]
-    |> VendingMachine.insert_coin("QUARTER")
-    |> VendingMachine.insert_coin("QUARTER")
-    |> VendingMachine.select_product("COLA") ==
-      %{
-        current_amount: 0.50,
-        coin_return: 0.00,
-        msg: "PRICE 1.0"
-      }
+           |> VendingMachine.insert_coin("QUARTER")
+           |> VendingMachine.insert_coin("QUARTER")
+           |> VendingMachine.select_product("COLA") ==
+             %{
+               current_amount: 0.50,
+               coin_return: 0.00,
+               msg: "PRICE 1.0",
+               stock: %{"COLA" => 10, "CHIPS" => 10, "CANDY" => 10}
+             }
   end
 
   test "The user doesn't insert enough change and selects a candy", context do
     assert context[:state]
-    |> VendingMachine.insert_coin("QUARTER")
-    |> VendingMachine.insert_coin("QUARTER")
-    |> VendingMachine.select_product("CANDY") ==
-      %{
-        current_amount: 0.50,
-        coin_return: 0.00,
-        msg: "PRICE 0.65"
-      }
+           |> VendingMachine.insert_coin("QUARTER")
+           |> VendingMachine.insert_coin("QUARTER")
+           |> VendingMachine.select_product("CANDY") ==
+             %{
+               current_amount: 0.50,
+               coin_return: 0.00,
+               msg: "PRICE 0.65",
+               stock: %{"COLA" => 10, "CHIPS" => 10, "CANDY" => 10}
+             }
   end
 
+  test "The user inserts more change then the cost of the product", context do
+    assert context[:state]
+           |> VendingMachine.insert_coin("QUARTER")
+           |> VendingMachine.insert_coin("QUARTER")
+           |> VendingMachine.insert_coin("QUARTER")
+           |> VendingMachine.select_product("CANDY") ==
+             %{
+               current_amount: 0.00,
+               coin_return: 0.10,
+               msg: "",
+               stock: %{"COLA" => 10, "CHIPS" => 10, "CANDY" => 9}
+             }
+  end
+
+  test "The user decides he would no longer like something and wants his coins returned", context do
+    assert context[:state]
+           |> VendingMachine.insert_coin("QUARTER")
+           |> VendingMachine.insert_coin("QUARTER")
+           |> VendingMachine.insert_coin("QUARTER")
+           |> VendingMachine.return_coins() ==
+             %{
+               current_amount: 0.00,
+               coin_return: 0.75,
+               msg: "INSERT COIN",
+               stock: %{"COLA" => 10, "CHIPS" => 10, "CANDY" => 10}
+             }
+  end
+
+  test "The user selects a product that is sold out after inserting coins", context do
+    assert %{context[:state] | :stock => %{"COLA" => 10, "CHIPS" => 0, "CANDY" => 10}}
+           |> VendingMachine.insert_coin("QUARTER")
+           |> VendingMachine.insert_coin("QUARTER")
+           |> VendingMachine.select_product("CHIPS") ==
+             %{
+               current_amount: 0.50,
+               coin_return: 0.00,
+               msg: "SOLD OUT",
+               stock: %{"COLA" => 10, "CHIPS" => 0, "CANDY" => 10}
+             }
+  end
 end
