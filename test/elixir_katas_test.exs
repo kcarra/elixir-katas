@@ -21,6 +21,4 @@ defmodule ElixirKatasTest do
     assert ElixirKatas.RomanNumeral.convert_int_to_roman_numeral([20, 10, 35, 333, 666, 1205, 550, 633, 734, 30]) ==
     ["XX", "X", "XXXV", "CCCXXXIII", "DCLXVI", "MCCV", "DL", "DCXXXIII", "DCCXXXIV", "XXX"]
   end
-
-
 end

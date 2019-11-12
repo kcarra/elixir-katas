@@ -13,10 +13,13 @@ defmodule ElixirKatas.FizzBuzz do
     cond do
       rem(int, 5) == 0 and rem(int, 3) == 0 ->
         "Fizz Buzz"
+
       rem(int, 5) == 0 ->
         "Buzz"
+
       rem(int, 3) == 0 ->
         "Fizz"
+
       true ->
         int
     end
@@ -38,7 +41,12 @@ defmodule ElixirKatas.RomanNumeral do
   end
 
   def convert_int_to_roman_numeral(int, roman_numeral \\ "")
-  def convert_int_to_roman_numeral(int, roman_numeral) when int > 0 do
+
+  def convert_int_to_roman_numeral(int, roman_numeral) when int == 0 do
+    roman_numeral
+  end
+
+  def convert_int_to_roman_numeral(int, roman_numeral) do
     {decimal, index} =
       @decimal_value
       |> Enum.with_index()
@@ -46,9 +54,5 @@ defmodule ElixirKatas.RomanNumeral do
 
     roman_numeral = roman_numeral <> "#{Enum.at(@numeral_value, index)}"
     convert_int_to_roman_numeral(int - decimal, roman_numeral)
-  end
-
-  def convert_int_to_roman_numeral(int, roman_numeral) when int == 0 do
-    roman_numeral
   end
 end
