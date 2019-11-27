@@ -10,8 +10,8 @@ defmodule ElixirKatas.VendingMachine do
     - Implements the Vending machine Kata [https://github.com/guyroyse/vending-machine-kata]
   """
   @insert_coin_msg "INSERT COIN"
-  @thank_you "THANK YOU"
-  @sold_out "SOLD OUT"
+  @thank_you_msg "THANK YOU"
+  @sold_out_msg "SOLD OUT"
   @vending_machine_coin_mapping %{
     "QUARTER" => 0.25,
     "DIME" => 0.10,
@@ -38,12 +38,12 @@ defmodule ElixirKatas.VendingMachine do
   def select_product(state, product) do
     cond do
       state[:stock][product] == 0 ->
-        %{state | :msg => @sold_out}
+        %{state | :msg => @sold_out_msg}
 
       state[:current_amount] == @vending_machine_products[product] ->
         %{
           state
-          | :msg => @thank_you,
+          | :msg => @thank_you_msg,
             :current_amount => 0.00,
             :stock => %{state[:stock] | product => state[:stock][product] - 1}
         }

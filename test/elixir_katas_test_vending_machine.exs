@@ -145,4 +145,8 @@ defmodule ElixirKatasVendingMachine do
                stock: %{"COLA" => 10, "CHIPS" => 0, "CANDY" => 10}
              }
   end
+
+  test "The vending machine displays 'EXACT CHANGE ONLY' when it isn't able to make change for any of the items it", context do
+      assert true
+  end
 end

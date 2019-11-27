@@ -6,7 +6,7 @@ defmodule ElixirKatas.FizzBuzz do
       by only 3 it returns "Fizz"
   """
   def start(int) when is_list(int) do
-    Enum.map(int, fn i -> start(i) end)
+    Enum.map(int, &start/1)
   end
 
   def start(int) do
@@ -25,6 +25,19 @@ defmodule ElixirKatas.FizzBuzz do
     end
   end
 end
+
+defmodule FizzBuzzPatternMatching do
+  def go(min, max), do: Enum.each(min..max, &go/1)
+  def go(num) do
+    case {rem(num, 5), rem(num, 3)} do
+      {0, 0} -> IO.puts "FizzBuzz"
+      {0, _} -> IO.puts "Fizz"
+      {_, 0} -> IO.puts "Buzz"
+      _ -> num
+    end
+  end
+end
+
 
 defmodule ElixirKatas.RomanNumeral do
   @moduledoc """
